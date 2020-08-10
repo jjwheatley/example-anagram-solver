@@ -1,6 +1,6 @@
 'use strict';
 
-function AnagramSolver () {
+function AnagramSolver() {
 
     this.checkTextForAnagrams = async function(text) {
         let anagrams = [];
@@ -15,16 +15,13 @@ function AnagramSolver () {
                     anagrams.push(wordList[key]);
                     text = isAnagram;
                 }
-            }            
+            }
         });
 
         return anagrams;
     }
 
-    // this.getWordList = function(){
-    // }
-
-    function isWordWithinText (haystack, needle) {
+    function isWordWithinText(haystack, needle) {
         let haystackArray = getArrayFromString(haystack); //Make user input into an array. This is our haystack
         let needleArray = getArrayFromString(needle); // Make the dictionary word we're searching for into an array. This is our needle
         // console.log(needle);
@@ -48,7 +45,7 @@ function AnagramSolver () {
         return haystackLeftovers;
     }
 
-    function getArrayFromString (string) {
+    function getArrayFromString(string) {
         let array = [];
         for (let i = 0; i < string.length; i++) {
             if (!(string.charAt(i) in array)) {
@@ -61,7 +58,7 @@ function AnagramSolver () {
         return array;
     }
 
-    function getObjectSize (object) {
+    function getObjectSize(object) {
         let size = 0,
             key;
         for (key in object) {
@@ -70,7 +67,7 @@ function AnagramSolver () {
         return size;
     }
 
-    function getStringFromArray (array) {
+    function getStringFromArray(array) {
         let string = '';
         Object.keys(array).sort().forEach(function(key) {
             for (let i = 0; i < array[key]; i++) {
@@ -80,7 +77,7 @@ function AnagramSolver () {
         return string;
     }
 
-    function sortByKey (object) {
+    function sortByKey(object) {
         const ordered = {};
         Object.keys(object).sort().forEach(function(key) {
             ordered[key] = object[key];
@@ -88,4 +85,3 @@ function AnagramSolver () {
         return ordered;
     }
 }
-
