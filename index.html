@@ -18,12 +18,11 @@
 <script>
     function checkForAnagrams() {
         let text = document.getElementById('anagram-text').value;
-        // import AnagramSolver from './anagramSolver';
         let anagramer = new AnagramSolver;
-        let result = anagramer.checkTextForAnagrams(text);
-        console.log(result);
-        // let AnagramSolver = new AnagramSolver();
-        // AnagramSolver.checkTextForAnagrams(text);
+        let solved = anagramer.checkTextForAnagrams(text);
+        solved.then(function(result) {
+            console.log(result) // Show result
+        })
     }
 
 

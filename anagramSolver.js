@@ -2,23 +2,31 @@
 
 function AnagramSolver () {
 
-    this.checkTextForAnagrams = function(text) {
+    this.checkTextForAnagrams = async function(text) {
         let anagrams = [];
-        let wordList = ['list', 'no', 'time'];
-
-        for (let key in wordList) {
-            let isAnagram = this.isWordWithinText(text, wordList[key]);
-            if (isAnagram !== false) {
-                anagrams.push(wordList[key]);
-                text = isAnagram;
+        let wordList = [];
+        await $.getJSON("wordlists/WebstersEnglishDictionary/dictionary.json", function(jsonDictionary) {
+            for (let word in jsonDictionary) {
+                wordList.push(word);
             }
-        }
+            for (let key in wordList) {
+                let isAnagram = isWordWithinText(text, wordList[key]);
+                if (isAnagram !== false) {
+                    anagrams.push(wordList[key]);
+                    text = isAnagram;
+                }
+            }            
+        });
+
         return anagrams;
     }
 
-    this.isWordWithinText = function(haystack, needle) {
-        let haystackArray = this.getArrayFromString(haystack); //Make user input into an array. This is our haystack
-        let needleArray = this.getArrayFromString(needle); // Make the dictionary word we're searching for into an array. This is our needle
+    // this.getWordList = function(){
+    // }
+
+    function isWordWithinText (haystack, needle) {
+        let haystackArray = getArrayFromString(haystack); //Make user input into an array. This is our haystack
+        let needleArray = getArrayFromString(needle); // Make the dictionary word we're searching for into an array. This is our needle
         // console.log(needle);
         Object.keys(needleArray).forEach(function(key) {
             if (haystackArray[key]) {
@@ -33,14 +41,14 @@ function AnagramSolver () {
                 }
             }
         });
-        if (this.getObjectSize(needleArray) > 0) {
+        if (getObjectSize(needleArray) > 0) {
             return false; //Not all characters in the needle were found and unset
         }
-        let haystackLeftovers = this.getStringFromArray(haystackArray);
+        let haystackLeftovers = getStringFromArray(haystackArray);
         return haystackLeftovers;
     }
 
-    this.getArrayFromString = function(string) {
+    function getArrayFromString (string) {
         let array = [];
         for (let i = 0; i < string.length; i++) {
             if (!(string.charAt(i) in array)) {
@@ -49,11 +57,11 @@ function AnagramSolver () {
                 array[string.charAt(i)] += 1;
             }
         }
-        array = this.sortByKey(array);
+        array = sortByKey(array);
         return array;
     }
 
-    this.getObjectSize = function(object) {
+    function getObjectSize (object) {
         let size = 0,
             key;
         for (key in object) {
@@ -62,7 +70,7 @@ function AnagramSolver () {
         return size;
     }
 
-    this.getStringFromArray = function(array) {
+    function getStringFromArray (array) {
         let string = '';
         Object.keys(array).sort().forEach(function(key) {
             for (let i = 0; i < array[key]; i++) {
@@ -72,7 +80,7 @@ function AnagramSolver () {
         return string;
     }
 
-    this.sortByKey = function(object) {
+    function sortByKey (object) {
         const ordered = {};
         Object.keys(object).sort().forEach(function(key) {
             ordered[key] = object[key];
