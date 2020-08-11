@@ -21,12 +21,23 @@ function AnagramSolver() {
                 strings = splitStringIntoUsableLengths(string);
                 solvedStrings = checkStringsAgainstWordList(strings, wordList);
                 if(getObjectSize(solvedStrings) == strings.length){
-                    anagrams = solvedStrings;
+                    anagrams = formatResults(solvedStrings, jsonDictionary)
+
                 }
             }
         });
         console.table(anagrams);
         return anagrams;
+    }
+
+    function formatResults(solutions, dictionary){
+        for (let key in solutions) {
+            for(let solution of solutions[key]){
+                solutions[key] = solution + ': ' + dictionary[solution];
+            }
+        }
+        return solutions;
+
     }
 
     function checkStringsAgainstWordList(strings, wordList){
