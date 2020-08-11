@@ -2,32 +2,58 @@
 
 function AnagramSolver() {
 
-    this.checkTextForAnagrams = async function(text) {
-        let string = text.replace(/\s+/g, '');
+    this.checkTextForAnagrams = async function(text, type) {
+        let string = text.toLowerCase();
         let anagrams = [];
         let wordList = [];
-        let wordLengths = [];
         await $.getJSON("wordlists/WebstersEnglishDictionary/dictionary.json", function(jsonDictionary) {
             //Build Dictionary Array
             for (let word in jsonDictionary) {
                 wordList.push(word);
             }
-
-            let loopLimit = 20;
-            let strings = [];
-            let solvedStrings = [];
-            for(let i = 1; i < loopLimit; i++) {
-                string = scrambleString(string);
-                strings = splitStringIntoUsableLengths(string);
-                solvedStrings = checkStringsAgainstWordList(strings, wordList);
-                if(getObjectSize(solvedStrings) == strings.length){
-                    anagrams = formatResults(solvedStrings, jsonDictionary)
-
-                }
+            if(string.length != 9){
+                type = 'solutionMultistring';
             }
+            switch(type) {
+                case 'solutionCountdown':
+                    anagrams = solutionCountdown(string, wordList, jsonDictionary);
+                  break;
+                case 'solutionMultistring':
+                default:
+                    anagrams = solutionMultistring(string, wordList, jsonDictionary);
+                  break;
+              }
         });
         console.table(anagrams);
         return anagrams;
+    }
+
+    function solutionCountdown(text, wordList, dictionary){
+        let results = [];
+        let string = [text];
+        let solvedStrings = checkStringsAgainstWordList(string, wordList);
+        if(getObjectSize(solvedStrings) == string.length){
+            results = formatResults(solvedStrings, dictionary)
+        }
+        return results;
+    }
+
+    function solutionMultistring(text, wordList, dictionary){
+        let results = [];
+        let string = text.replace(/\s+/g, '');
+        let loopLimit = 20;
+        let strings = [];
+        let solvedStrings = [];
+        for(let i = 1; i < loopLimit; i++) {
+            string = scrambleString(string);
+            strings = splitStringIntoUsableLengths(string);
+            solvedStrings = checkStringsAgainstWordList(strings, wordList);
+            if(getObjectSize(solvedStrings) == strings.length){
+                results = formatResults(solvedStrings, dictionary)
+
+            }
+        }
+        return results;
     }
 
     function formatResults(solutions, dictionary){

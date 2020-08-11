@@ -10,16 +10,39 @@
 </head>
 
 <body>
-    <input id="anagram-text" />
-    <button id="get-anagrams" onclick="checkForAnagrams()">Get Anagrams</button>
+    <label for="anagramText">
+        Text
+    </label>
+    <input id="anagramText" name="anagramText" /><br /><br />
+    
+
+    <strong>Mode:</strong><br />
+    <input type="radio" id="solutionCountdown" name="solutionMode" value="solutionCountdown" checked>
+    <label for="solutionCountdown">
+        Countdown Conundrum Mode
+    </label><br />
+
+    <input type="radio" id="solutionMultistring" name="solutionMode" value="solutionMultistring">
+    <label for="solutionMultistring">
+        Just Solve it (unlimited length)
+    </label><br /><br />
+
+    <button id="get-anagrams" onclick="checkForAnagrams()">Get Anagrams</button>  
 </body>
 
 </html>
 <script>
     function checkForAnagrams() {
-        let text = document.getElementById('anagram-text').value;
+        let solutionMode; 
+        for(let element of document.getElementsByName('solutionMode')){
+            if(element.checked === true){
+                solutionMode = element.value;
+            }
+        }
+
+        let text = document.getElementById('anagramText').value;
         let anagramer = new AnagramSolver;
-        let solved = anagramer.checkTextForAnagrams(text);
+        let solved = anagramer.checkTextForAnagrams(text, solutionMode);
         solved.then(function(result) {
             console.log(result) // Show result
         })
